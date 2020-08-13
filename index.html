@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/c4a4310769.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="style.css" />
+        <style>
+            .fas {
+                font-size: .9em;
+            }
+        </style>
+        <title>ASM JS Interpreter</title>
+    </head>
+    <body>
+        <h3>JavaScript D-RISC Assembly Interpreter</h3>
+        <div style="float:left; width:65%">
+            <textarea style="resize: none; width:100%; height: 400px" id="program"></textarea><br /><br />
+            <button class="btn btn-primary" onclick="compileProgram(document.getElementById('program').value)"><i class="fas fa-file-code"></i> Compile</button>
+            <button class="btn btn-primary" onclick="runProgram()"><i class="fas fa-play"></i> Run</button>
+            <button class="btn btn-danger" onclick="endOfProgram = true"><i class="fas fa-pause"></i> Halt execution</button>
+            <br />
+            <p style="position:fixed; bottom: 10px; z-index:-1">Author: <a href="mailto:bsamuele00@gmail.com">Samuele Bonini</a></p>
+
+        </div>
+        <div style="float:right; width:30%">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-sm btn-dark" data-toggle="modal" data-target="#exampleModal">
+                <i class="fas fa-question-circle"></i> Instruction set
+            </button>
+            <br /><br />
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 1000px !important;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">D-Risc Instruction set</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" style="max-height: 500px !important; overflow-y: scroll !important">
+                        <p>
+                            <b>Instruction counter (IC):</b> contains the index of the current instruction being executed. Normally, after an instruction is executed, the value of IC is increased by 1. Jump instructions such as <code>goto</code> can alter the content of this register and hence change the logical flow of the program.
+                        </p>
+                        <p>
+                            <b>Supported registers:</b> D-Risc assembly allows the use of 64 registers, zero-indexed. To access a register, use <i>R</i> + the number of the register, as in <code>R1</code>. Symbolic register names, like <code>Rbase</code>, are not supported yet.
+                        </p>
+                        <p>
+                            <b>Spacing and parameter rules:</b> only one instruction is allowed per line. Parameters must be separated by a comma. The last parameter must not be followed by any comma or other text, except for comments (see below). Valid example: <code>load r1, r2, r3</code>.
+                        </p>
+                        <p>
+                            <b>Labels:</b> a label is a short alpha-numerical string followed by a colon, which identifies a line of code. It can be used for jumps, or to describe what a section of the program does (much like a function name). A valid label is, for example, <code>label:</code>. You can only put labels at the beginning of a line. Valid example: <code>loop: clear r1</code>.
+                        </p>
+                        <p>
+                            <b>Comments:</b> you can comment your code by adding a semi-colon at the end of the instruction, followed by your comment. For example: <br/> <code>add r1, r2, r3 ;this adds r1 to r2 and puts the result in r3</code>.
+                        </p>
+                        <p>
+                            Below you can find the full list of supported instructions, alongside their syntax and semantic.
+                        </p>
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Instruction</th>
+                                <th scope="col">Parameter 1</th>
+                                <th scope="col">Parameter 2</th>
+                                <th scope="col">Parameter 3</th>
+                                <th scope="col">Semantic</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>add</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = reg[1] + reg[2]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>addi</td>
+                                <td>r1</td>
+                                <td>const</td>
+                                <td>r2</td>
+                                <td><pre>reg[3] = reg[1] + const</pre></td>
+                              </tr>
+                              <tr>
+                                <td>sub</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = reg[1] - reg[2]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>subi</td>
+                                <td>r1</td>
+                                <td>const</td>
+                                <td>r2</td>
+                                <td><pre>reg[3] = reg[1] - const</pre></td>
+                              </tr>
+                              <tr>
+                                <td>mul</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = reg[1] * reg[2]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>muli</td>
+                                <td>r1</td>
+                                <td>const</td>
+                                <td>r2</td>
+                                <td><pre>reg[3] = reg[1] * const</pre></td>
+                              </tr>
+                              <tr>
+                                <td>div</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = reg[1] / reg[2]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>divi</td>
+                                <td>r1</td>
+                                <td>const</td>
+                                <td>r2</td>
+                                <td><pre>reg[3] = reg[1] / const</pre></td>
+                              </tr>
+                              <tr>
+                                <td>inc</td>
+                                <td>r1</td>
+                                <td></td>
+                                <td></td>
+                                <td><pre>reg[1]++</pre></td>
+                              </tr>
+                              <tr>
+                                <td>dec</td>
+                                <td>r1</td>
+                                <td></td>
+                                <td></td>
+                                <td><pre>reg[1]--</pre></td>
+                              </tr>
+                              <tr>
+                                <td>clear</td>
+                                <td>r1</td>
+                                <td></td>
+                                <td></td>
+                                <td><pre>reg[1] = 0</pre></td>
+                              </tr>
+                              <tr>
+                                <td>mov</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td></td>
+                                <td><pre>reg[2] = reg[1]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>movi</td>
+                                <td>const</td>
+                                <td>r1</td>
+                                <td></td>
+                                <td><pre>reg[1] = const</pre></td>
+                              </tr>
+                              <tr>
+                                <td>load</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = mem[r[1] + r[2]]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>loadi</td>
+                                <td>r1</td>
+                                <td>const</td>
+                                <td>r3</td>
+                                <td><pre>reg[3] = mem[r[1] + const]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>store</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>mem[r[1] + r[2]] = reg[3]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>storei</td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>r3</td>
+                                <td><pre>mem[r[1] + const] = reg[3]</pre></td>
+                              </tr>
+                              <tr>
+                                <td>goto</td>
+                                <td>label</td>
+                                <td></td>
+                                <td></td>
+                                <td><pre>ic = label</pre></td>
+                              </tr>
+                              <tr>
+                                <td>if<em>condition</em><br /><small>Supported: if&lt;, if&lt;=, <br/>if&gt;, if&gt;=, if=, if!=</small></td>
+                                <td>r1</td>
+                                <td>r2</td>
+                                <td>label</td>
+                                <td><pre>if(reg[1] condition reg[2]) then ic = label</pre></td>
+                              </tr>
+                              <tr>
+                                <td>if<em>condition</em>0<br /><small>Supported: if&lt;0, if&lt;=0, <br/>if&gt;0, if&gt;=0, if=0, if!=0</small></td>
+                                <td>r1</td>
+                                <td></td>
+                                <td>label</td>
+                                <td><pre>if(reg[1] condition 0) then ic = label</pre></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <p style="margin: 0">Delay in-between instructions: <input style="width:50px" id="delay_input" type="text" value="1000" onkeydown="return numberIsPressed(event)"> ms <button class="btn btn-sm btn-dark" onclick="setDelay(parseInt(document.getElementById('delay_input').value))"><i class="fas fa-clock"></i> Change</button></button></p>
+            <p id="instruction">IC: </p>
+            <div>
+                <p class="menu_title"><span>Registers</span></p> <input type="checkbox" onchange="toggleZeroRegisters()" id="toggleZeroRegs" /> <label for="toggleZeroRegs">Hide registers containing zero</label>
+                <div id="regs" class="container">
+                    <ul id="reglist">
+
+                    </ul>
+                </div>
+            </div><br />
+            <div>
+                <p class="menu_title"><span>Used memory locations</span></p>
+                <p>Previously unused memory is initialized to random values.</p>
+                <div id="mem" class="container">
+                    <ul id="memlist"></ul>
+                </div>
+            </div><br />
+            <p class="menu_title"><span>Compiler messages</span></p>
+            <div class="container" id="compilerMsgs">
+
+            </div>
+        </div>
+        <script src="driscinterp.js"></script>
+        <script>
+            createRegisterList()
+        </script>
+    </body>
+</html>
