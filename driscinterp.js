@@ -363,7 +363,8 @@ createRegisterList = function () {
 
 updateRegisters = function () {
     let i = 0
-
+    selectLine(ic + 1)
+    
     document.getElementById("instruction").innerHTML = "IC: " + ic
     for (const r of reg) {
         this_reg = document.getElementById("reg" + i)
