@@ -44,3 +44,7 @@ li:nth-child(odd) {
     background:#fff; 
     padding:0 10px; 
  }
+
+ .no_background {
+     background-color: transparent !important;
+ }
