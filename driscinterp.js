@@ -282,7 +282,7 @@ executeALOperation = function (instruction, isImmediate) {
                 operator = '/'
                 if(isImmediate && !regb || !isImmediate && !reg[regb]) { // division by zero
                     endOfProgram = true
-                    compilerErrors.push("Run-time exception: division by zero.")
+                    document.getElementById("compilerMsgs").innerHTML = '<div class="alert alert-danger" role="alert">Run-time exception: division by zero.</div>'
                     return
                 }
                 break
