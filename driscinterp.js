@@ -280,6 +280,9 @@ executeALOperation = function (instruction, isImmediate) {
                 break
             case "div":
                 operator = '/'
+                console.log(isImmediate)
+                console.log(regb)
+                console.log(reg[regb])
                 if(isImmediate && !regb || !isImmediate && !reg[regb]) { // division by zero
                     endOfProgram = true
                     document.getElementById("compilerMsgs").innerHTML = '<div class="alert alert-danger" role="alert">Run-time exception: division by zero.</div>'
