@@ -280,6 +280,11 @@ executeALOperation = function (instruction, isImmediate) {
                 break
             case "div":
                 operator = '/'
+                if(isImmediate && !regb || !isImmediate && !reg[regb]) { // division by zero
+                    endOfProgram = true
+                    compilerErrors.push("Run-time exception: division by zero.")
+                    return
+                }
                 break
         }
 
