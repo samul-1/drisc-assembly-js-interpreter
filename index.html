@@ -18,29 +18,29 @@
         <title>ASM JS Interpreter</title>
     </head>
     <body>
-        <h3>JavaScript D-RISC Assembly Interpreter</h3>
+      <span style="display: inline-block; margin-bottom: 10px"><h3 style="display: inline-block;">JavaScript D-RISC Assembly Interpreter</h3> <a href="#" data-toggle="modal" data-target="#modal2">Beta version</a></span>
         <div style="float:left; width:65%">
             <textarea class="lined" style="resize: none; width:100%; height: 400px" id="program"></textarea><br /><br />
             <button class="btn btn-primary" onclick="compileProgram(document.getElementById('program').value)"><i class="fas fa-file-code"></i> Compile</button>
             <button class="btn btn-primary" onclick="runProgram()"><i class="fas fa-play"></i> Run</button>
             <button class="btn btn-danger" onclick="endOfProgram = true"><i class="fas fa-pause"></i> Halt execution</button>
             <br />
-            <p style="position:fixed; bottom: 10px; z-index:-1">Author: <a href="mailto:bsamuele00@gmail.com">Samuele Bonini</a></p>
+            <p style="position:fixed; bottom: 5px; z-index:-1">Author: <a href="mailto:bsamuele00@gmail.com">Samuele Bonini</a></p>
 
         </div>
         <div style="float:right; width:30%">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-sm btn-dark" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" class="btn btn-sm btn-dark" data-toggle="modal" data-target="#modal1">
                 <i class="fas fa-question-circle"></i> Instruction set
             </button>
             <br /><br />
             
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1Label" aria-hidden="true">
                 <div class="modal-dialog" style="max-width: 1000px !important;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">D-Risc Instruction set</h5>
+                    <h5 class="modal-title" id="modal1Label">D-Risc Instruction set</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -223,6 +223,37 @@
                     </div>
                 </div>
                 </div>
+            </div>
+            <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="modal2Label" aria-hidden="true">
+              <div class="modal-dialog" style="max-width: 1000px !important;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="modal2Label">About this software</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" style="max-height: 500px !important; overflow-y: scroll !important">
+                      <p>The program found on this page is still in <strong>beta mode</strong>. This means that you might encounter bugs during its use. If you do, please <a href="mailto:bsamuele00@gmail.com">contact me</a> to report them.</p>
+                      <h5>Changelog (recently added features):</h5>
+                      <ol>
+                        <li class="no_background">Line numbers are now displayed in the code editor</li>
+                        <li class="no_background">The line corresponding to the execution that's currently being executed is highlighted</li>
+                        <li class="no_background">Division by zero is now handled at run-time as an exception</li>
+                      </ol>
+                      <h5>Features that will be implemented in the future:</h5>
+                      <ol>
+                        <li class="no_background"><code>SHR</code> and <code>SHL</code> shift instructions</li>
+                        <li class="no_background">Support for symbolic register names, like <code>load rbase, rindex, rtemp</code></li>
+                        <li class="no_background">Support for a virtual, <a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">memory-mapped</a> screen for printing characters from memory</li>
+                        <li class="no_background">A <code>SETMEM</code> instruction that allows to directly manipulate the content of a memory location</li>
+                      </ol>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+              </div>
             </div>
             <p style="margin: 0">Delay in-between instructions: <input style="width:50px" id="delay_input" type="text" value="1000" onkeydown="return numberIsPressed(event)"> ms <button class="btn btn-sm btn-dark" onclick="setDelay(parseInt(document.getElementById('delay_input').value))"><i class="fas fa-clock"></i> Change</button></button></p>
             <p id="instruction">IC: </p>
