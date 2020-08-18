@@ -283,7 +283,7 @@ executeALOperation = function (instruction, isImmediate) {
                 console.log(isImmediate)
                 console.log(regb)
                 console.log(reg[regb])
-                if(isImmediate && !regb || !isImmediate && !reg[regb]) { // division by zero
+                if(isImmediate && !parseInt(regb) || !isImmediate && !reg[regb]) { // division by zero
                     endOfProgram = true
                     document.getElementById("compilerMsgs").innerHTML = '<div class="alert alert-danger" role="alert">Run-time exception: division by zero.</div>'
                     return
