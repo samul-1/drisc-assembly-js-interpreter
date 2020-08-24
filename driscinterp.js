@@ -292,9 +292,9 @@ executeALOperation = function (instruction, isImmediate) {
         }
 
         if (isImmediate) // if the instruction is an immediate operation (e.g. addi)
-            result = Math.floor(eval(reg[rega] + operator + regb))
+            result = Math.floor(eval(reg[rega] + operator + regb)) % ((2**32)-1)
         else
-            result = Math.floor(eval(reg[rega] + operator + reg[regb]))
+            result = Math.floor(eval(reg[rega] + operator + reg[regb])) % ((2**32)-1)
 
         reg[regc] = result
     }
